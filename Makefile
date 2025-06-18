@@ -1,15 +1,42 @@
-run:
-	go run ./cmd
+# Project name
+APP_NAME = ainit
 
+# Entry point
+MAIN = ./main.go
+
+# Output binary (optional)
+BIN = bin/$(APP_NAME)
+
+# Default target
+.DEFAULT_GOAL := help
+
+.PHONY: build run test tidy clean help
+
+## Build the Go project
 build:
-	go build -o bin/app ./cmd
+	go build -o $(BIN) $(MAIN)
 
-lint:
-	golangci-lint run
+## Run the project with example arguments
+run:
+	go run $(MAIN) "create a RESTful API server" myapp
 
-format:
-	gofmt -w . && goimports -w .
-
+## Run tests
 test:
-	go test ./...
+	go test -v ./...
 
+## Run go mod tidy
+tidy:
+	go mod tidy
+
+## Clean build files
+clean:
+	rm -rf bin/
+
+## Show help
+help:
+	@echo ""
+	@echo "Usage:"
+	@echo "  make <target>"
+	@echo ""
+	@echo "Targets:"
+	@grep -E '^##' Makefile | sed -E 's/^## //;s/:.*//'
