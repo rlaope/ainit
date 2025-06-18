@@ -2,7 +2,7 @@
 APP_NAME = ainit
 
 # Entry point
-MAIN = ./main.go
+MAIN = ./cmd/main.go
 
 # Output binary (optional)
 BIN = bin/$(APP_NAME)

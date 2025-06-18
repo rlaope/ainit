@@ -6,12 +6,15 @@ import (
 	"path/filepath"
 )
 
-func GenerateProejct(input string) {
-	println("프로젝트 생성 - README.md:", input)
-	createReadme(input)
+func GenerateProejct(description, projectName string) {
+	println("프로젝트 생성 - README.md:", description)
+	fmt.Printf("프로젝트 이름: %s\n", projectName)
+
+	// createReadme(input)
+	
 }
 
-func createReadme(input string) error {
+func createReadme(description string) error {
 	filename := "README.md"
 
 	outputDir, err := os.UserHomeDir()
@@ -27,7 +30,7 @@ func createReadme(input string) error {
 		return err
 	}
 
-	return os.WriteFile(outputPath, []byte(input), 0644)
+	return os.WriteFile(outputPath, []byte(description), 0644)
 }
 
 // TODO Add go project structure

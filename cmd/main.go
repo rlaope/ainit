@@ -8,15 +8,15 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("인수를 하나 넣어주세요.")
-		return
+	if len(os.Args) < 3 {
+		fmt.Println("Usage: go run main.go <description> <project_name>")
+		os.Exit(1)
 	}
 
-	// TODO 지금은 content 자연어 하나만 받지만 project name 받고 그걸로 mkdir 하고 go project settings 하도록
-	// TODO 1. ai로 readme 만들기
-	// TODO 2. go project .gitignore, .gitattributes, Makefile, cmd/main.go 에 hello world 출력하는거 자동으로 만들어지도록
+	description := os.Args[1]
+	projectName := os.Args[2]
 
-	arg := os.Args[1]
-	pkg.GenerateProejct(arg)
+	pkg.GenerateProejct(description, projectName)
+
+	fmt.Printf("Project '%s' generated successfully.\n", projectName)
 }
