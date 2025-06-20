@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rlaope/ainit/pkg"
+	"github.com/rlaope/ainit/pkg/generate"
 )
 
 func main() {
