@@ -1,2 +1,4 @@
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/sashabaranov/go-openai v1.40.2 h1:IALpUnkdy6BDp2ZSAiD4vz+C2wpiKOlfUQcViLrfTOk=
 github.com/sashabaranov/go-openai v1.40.2/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=

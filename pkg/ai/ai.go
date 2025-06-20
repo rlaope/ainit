@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/sashabaranov/go-openai"
 )
 
 func GenerateReadme(description string) (string, error) {
+	_ = godotenv.Load() // .env 파일 자동 로딩
+
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
 		return "", fmt.Errorf("OPENAI_API_KEY 환경 변수가 설정되지 않았습니다")
@@ -19,7 +22,7 @@ func GenerateReadme(description string) (string, error) {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT4, // 또는 GPT3Dot5Turbo
+			Model: openai.GPT3Dot5Turbo, // 또는 GPT3Dot5Turbo
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    "user",

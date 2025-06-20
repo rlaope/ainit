@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	
 	if len(os.Args) < 3 {
 		fmt.Println("Usage: go run main.go <description> <project_name>")
 		os.Exit(1)
