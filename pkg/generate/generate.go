@@ -39,57 +39,68 @@ clean:
 	rm -rf bin/
 `
 
-func GenerateProejct(description, projectName string) {
-	println("프로젝트 생성 - README.md:", description)
-	fmt.Printf("프로젝트 이름: %s\n", projectName)
+func GenerateProject(description, projectName string) {
+	fmt.Println("Creating project - README.md from:", description)
+	fmt.Printf("Project name: %s\n", projectName)
 
-	err := createReadme(description, projectName)
+	projectDir, err := getProjectPath(projectName)
 	if err != nil {
-		fmt.Printf("README.md 생성 실패: %v\n", err)
+		fmt.Printf("Failed to get project path: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("프로젝트 생성 완료:", projectName)
+	if err := os.MkdirAll(filepath.Join(projectDir, "cmd"), 0755); err != nil {
+		fmt.Printf("Failed to create project directory: %v\n", err)
+		os.Exit(1)
+	}
+
+	if err := generateReadmeFile(description, projectDir); err != nil {
+		fmt.Printf("Failed to generate README.md: %v\n", err)
+		os.Exit(1)
+	}
+
+	if err := generateTemplateFiles(projectDir, projectName); err != nil {
+		fmt.Printf("Failed to generate template files: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("✅ Project created successfully:", projectName)
 }
 
-func createReadme(description string, name string) error {
+func generateReadmeFile(description, projectDir string) error {
 	content, err := ai.GenerateReadme(description)
-
 	if err != nil {
 		return err
 	}
+	readmePath := filepath.Join(projectDir, "README.md")
+	return os.WriteFile(readmePath, []byte(content), 0644)
+}
 
-	projectDir, err := getProjectPath(name)
-	if err != nil {
+func generateTemplateFiles(projectDir, projectName string) error {
+	if err := os.WriteFile(filepath.Join(projectDir, ".gitignore"), []byte(gitignoreTemplate), 0644); err != nil {
 		return err
 	}
-
-	if err := os.MkdirAll(filepath.Join(projectDir, "cmd"), 0755); err != nil {
-		return fmt.Errorf("디렉토리 생성 실패: %w", err)
+	if err := os.WriteFile(filepath.Join(projectDir, ".gitattributes"), []byte(gitattributesTemplate), 0644); err != nil {
+		return err
 	}
-	_ = os.WriteFile(projectDir, []byte(content), 0644)
-	_ = os.WriteFile(filepath.Join(name, ".gitignore"), []byte(gitignoreTemplate), 0644)
-	_ = os.WriteFile(filepath.Join(name, ".gitattributes"), []byte(gitattributesTemplate), 0644)
-
-	_ = os.WriteFile(filepath.Join(name, "Makefile"), []byte(makefileTemplate), 0644)
+	if err := os.WriteFile(filepath.Join(projectDir, "Makefile"), []byte(makefileTemplate), 0644); err != nil {
+		return err
+	}
 
 	mainContent := `package main
 
 import "fmt"
 
 func main() {
-	fmt.Println("Hello, ` + name + `!")
+	fmt.Println("Hello, ` + projectName + `!")
 }`
-	_ = os.WriteFile(filepath.Join(name, "cmd", "main.go"), []byte(mainContent), 0644)
-
-	cmd := exec.Command("go", "mod", "init", name)
-	cmd.Dir = name
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("go mod init 실패: %w", err)
+	if err := os.WriteFile(filepath.Join(projectDir, "cmd", "main.go"), []byte(mainContent), 0644); err != nil {
+		return err
 	}
 
-	fmt.Println("✅ 프로젝트 생성 완료:", name)
-	return nil
+	cmd := exec.Command("go", "mod", "init", projectName)
+	cmd.Dir = projectDir
+	return cmd.Run()
 }
 
 func getProjectPath(projectName string) (string, error) {
@@ -97,6 +108,5 @@ func getProjectPath(projectName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	projectPath := filepath.Join(home, "Downloads", projectName)
-	return projectPath, nil
+	return filepath.Join(home, "Downloads", projectName), nil
 }
