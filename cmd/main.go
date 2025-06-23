@@ -17,7 +17,7 @@ func main() {
 	description := os.Args[1]
 	projectName := os.Args[2]
 
-	pkg.GenerateProejct(description, projectName)
+	pkg.GenerateProject(description, projectName)
 
 	fmt.Printf("Project '%s' generated successfully.\n", projectName)
 }
