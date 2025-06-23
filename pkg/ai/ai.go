@@ -10,7 +10,7 @@ import (
 )
 
 func GenerateReadme(description string) (string, error) {
-	_ = godotenv.Load() // .env 파일 자동 로딩
+	_ = godotenv.Load() 
 
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
